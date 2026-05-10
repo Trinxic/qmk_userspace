@@ -12,7 +12,8 @@
 #define AUDIO_PWM_DRIVER PWMD6
 #define AUDIO_INIT_DELAY
 #define AUDIO_PWM_CHANNEL RP2040_PWM_CHANNEL_A
-// #define STARTUP_SONG SONG(ODE_TO_JOY)
+// #define STARTUP_SONG SONG(ODE_TO_JOY)  // AHHHHHHHH
+#define STARTUP_SONG SONG(NO_SOUND) // finally, peace!
 
 // Analog Sticks (I don't have these)
 #define ANALOG_JOYSTICK_Y_AXIS_PIN GP26
