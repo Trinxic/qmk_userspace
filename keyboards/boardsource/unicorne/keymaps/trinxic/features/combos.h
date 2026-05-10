@@ -48,6 +48,25 @@ const uint16_t PROGMEM right_ctrl[]           = {KC_M, KC_W, COMBO_END};
 const uint16_t PROGMEM right_ctrl_alt[]       = {KC_M, KC_W, KC_Z, COMBO_END};
 const uint16_t PROGMEM right_ctrl_shift[]     = {KC_M, KC_W, KC_V, COMBO_END};
 
-combo_t key_combos[] = {
-    [CHORD_CAPS] = COMBO(chord_caps, KC_CAPS), [TAB] = COMBO(tab, KC_TAB), [ESC] = COMBO(esc, KC_ESC), [ENTER] = COMBO(enter, KC_ENT), [LEFT_FUNC] = COMBO(left_func, TO(_FUNC)), [RIGHT_FUNC] = COMBO(right_func, TO(_FUNC)), [LEFT_ALT] = COMBO(left_alt, KC_LALT), [LEFT_ALT_SHIFT] = COMBO(left_alt_shift, LALT(KC_LSFT)), [LEFT_ALT_SHIFT_CTRL] = COMBO(left_alt_shift_ctrl, LALT(LCTL(KC_LSFT))), [LEFT_SHIFT] = COMBO(left_shift, KC_LSFT), [LEFT_CTRL] = COMBO(left_ctrl, KC_LCTL), [LEFT_CTRL_ALT] = COMBO(left_ctrl_alt, LCTL(KC_LALT)), [LEFT_CTRL_SHIFT] = COMBO(left_ctrl_shift, LCTL(KC_LSFT)), [RIGHT_ALT] = COMBO(right_alt, KC_RALT), [RIGHT_ALT_SHIFT] = COMBO(right_alt_shift, RALT(KC_RSFT)), [RIGHT_ALT_SHIFT_CTRL] = COMBO(right_alt_shift_ctrl, RALT(RCTL(KC_RSFT))), [RIGHT_SHIFT] = COMBO(right_shift, KC_RSFT), [RIGHT_CTRL] = COMBO(right_ctrl, KC_RCTL), [RIGHT_CTRL_ALT] = COMBO(right_ctrl_alt, RCTL(KC_RALT)), [RIGHT_CTRL_SHIFT] = COMBO(right_ctrl_shift, RCTL(KC_RSFT)),
+combo_t                key_combos[]           = {
+    [CHORD_CAPS]           = COMBO(chord_caps, KC_CAPS),
+    [TAB]                  = COMBO(tab, KC_TAB),
+    [ESC]                  = COMBO(esc, KC_ESC),
+    [ENTER]                = COMBO(enter, KC_ENT),
+    [LEFT_FUNC]            = COMBO(left_func, TO(_FUNC)),
+    [RIGHT_FUNC]           = COMBO(right_func, TO(_FUNC)),
+    [LEFT_ALT]             = COMBO(left_alt, KC_LALT),
+    [LEFT_ALT_SHIFT]       = COMBO(left_alt_shift, LALT(KC_LSFT)),
+    [LEFT_ALT_SHIFT_CTRL]  = COMBO(left_alt_shift_ctrl, LALT(LCTL(KC_LSFT))),
+    [LEFT_SHIFT]           = COMBO(left_shift, KC_LSFT),
+    [LEFT_CTRL]            = COMBO(left_ctrl, KC_LCTL),
+    [LEFT_CTRL_ALT]        = COMBO(left_ctrl_alt, LCTL(KC_LALT)),
+    [LEFT_CTRL_SHIFT]      = COMBO(left_ctrl_shift, LCTL(KC_LSFT)),
+    [RIGHT_ALT]            = COMBO(right_alt, KC_RALT),
+    [RIGHT_ALT_SHIFT]      = COMBO(right_alt_shift, RALT(KC_RSFT)),
+    [RIGHT_ALT_SHIFT_CTRL] = COMBO(right_alt_shift_ctrl, RALT(RCTL(KC_RSFT))),
+    [RIGHT_SHIFT]          = COMBO(right_shift, KC_RSFT),
+    [RIGHT_CTRL]           = COMBO(right_ctrl, KC_RCTL),
+    [RIGHT_CTRL_ALT]       = COMBO(right_ctrl_alt, RCTL(KC_RALT)),
+    [RIGHT_CTRL_SHIFT]     = COMBO(right_ctrl_shift, RCTL(KC_RSFT)),
 };

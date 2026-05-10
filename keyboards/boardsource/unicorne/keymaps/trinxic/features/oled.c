@@ -152,24 +152,33 @@ static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
         /*1 1*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 252, 124, 60, 156, 156, 156, 60, 124, 252, 248, 240, 0, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 127, 112, 112, 125, 125, 125, 112, 112, 127, 63, 31, 0, 0},
     }};
 
-static void render_ctl_shift(int ctl, int shft) {
+static bool render_ctl_shift(int ctl, int shft) {
+    oled_set_cursor(0, 5);
     oled_write_raw_P( // [2] and [3] have ctrl so 0|2 + 0|1 can produce all for 4 combinations.. so smart
         mod_icons[0][2 * ctl + shft], sizeof(mod_icons[0][2 * ctl + shft]));
+    return ctl + shft > 0;
 }
 
-static void render_gui_alt(int gui, int alt) {
+static bool render_gui_alt(int gui, int alt) {
+    oled_set_cursor(0, 7);
     oled_write_raw_P(mod_icons[1 + os_num][2 * gui + alt], sizeof(mod_icons[1 + os_num][2 * gui + alt]));
+    return gui + alt > 0;
 }
 
+/**
+ * Render OS logo if all 4 mod keys are pressed simultaniously.
+ * Render active mod keys
+ * If no mod keys are active, clear area (reduce oled burn-in)
+ */
 void render_mod_status(uint8_t mod_status) {
     if ((mod_status & MOD_MASK_CTRL) && (mod_status & MOD_MASK_SHIFT) && (mod_status & MOD_MASK_GUI) && (mod_status & MOD_MASK_ALT)) {
         set_os_logo();
-    } else {
+    } else if (render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0) + render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0) == 0) {
         oled_set_cursor(0, 5);
-        render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0);
-
-        oled_set_cursor(0, 7);
-        render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0);
+        for (int i = 5; i < 9; i++) {
+            // oled_set_cursor(0, i);  // shouldn't be necessary if '\n' is appended
+            oled_write_P(PSTR("     \n"), false);
+        }
     }
 }
 
