@@ -49,5 +49,5 @@
 // #define SPLIT_WPM_ENABLE       // words-per-minute status
 
 // Allow keyboard to turn on at PC cold-boot
-// ...going to see what happens if I just comment this out..
-// #define SPLIT_USB_TIMEOUT 26000 // milliseconds
+// originally 26k
+#define SPLIT_USB_TIMEOUT 20000 // milliseconds
