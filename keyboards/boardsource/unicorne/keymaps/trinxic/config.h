@@ -34,6 +34,8 @@
 
 // Combos
 #define COMBO_TERM 20 // milliseconds
+#define COMBO_ONLY_FROM_LAYER 0
+#define COMBO_COUNT 1
 #define BOTH_SHIFTS_TURNS_ON_CAPSLOCK
 
 // Split Keyboard Actions
