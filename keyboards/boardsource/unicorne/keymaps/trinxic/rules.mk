@@ -4,4 +4,5 @@ COMBO_ENABLE = yes
 LTO_ENABLE = yes
 OS_DETECTION_ENABLE = yes
 POINTING_DEVICE_DRIVER = analog_joystick
+POINTING_DEVICE_ENABLE = no
 SRC += lib/oled.c
