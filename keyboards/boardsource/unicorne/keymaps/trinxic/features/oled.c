@@ -52,46 +52,24 @@ void render_current_layer(void) {
     }
 }
 
-// Logos
-static void render_apple_logo(void) {
-    static const char PROGMEM raw_logo_apple[] = {
-        // `const unsigned char`
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 128, 128, 128, 0, 0, 0, 112, 124, 62, 62, 159, 135, 128, 128, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 224, 248, 252, 254, 255, 255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 31, 15, 6, 0, 0, 0, 0, 0, 0, 0, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 248, 224, 192, 192, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 15, 31, 63, 127, 127, 127, 63, 63, 31, 31, 31, 31, 63, 63, 127, 127, 63, 63, 31, 15, 3, 0, 0, 0, 0,
-    };
-    oled_write_raw_P(raw_logo_apple, sizeof(raw_logo_apple));
-}
-static void render_arch_logo(void) {
-    static const char PROGMEM raw_arch_logo[] = {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 224, 240, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 224, 248, 242, 247, 239, 255, 255, 255, 252, 240, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 192, 240, 252, 254, 255, 255, 127, 7, 3, 1, 1, 3, 7, 127, 255, 255, 255, 252, 184, 160, 128, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 7, 7, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 7, 14, 8, 0, 0, 0,
-    };
-    oled_write_raw_P(raw_arch_logo, sizeof(raw_arch_logo));
-}
-static void render_windows_logo(void) {
-    static const char PROGMEM raw_windows_logo[] = {
-        0, 0, 0, 128, 128, 128, 128, 192, 192, 192, 192, 192, 192, 224, 0, 224, 224, 224, 224, 224, 240, 240, 240, 240, 240, 240, 248, 248, 248, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 0, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 7, 7, 7, 7, 7, 0, 7, 15, 15, 15, 15, 15, 15, 15, 15, 31, 31, 31, 31, 31, 0, 0, 0,
-    };
-    oled_write_raw_P(raw_windows_logo, sizeof(raw_windows_logo));
+static void render_os_logo(int os_int) {
+    oled_set_cursor(0, 5);
+    static const char PROGMEM raw_os_logo[3][128] = {{
+                                                         // Apple Logo
+                                                         0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 128, 128, 128, 0, 0, 0, 112, 124, 62, 62, 159, 135, 128, 128, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 224, 248, 252, 254, 255, 255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 31, 15, 6, 0, 0, 0, 0, 0, 0, 0, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 248, 224, 192, 192, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 15, 31, 63, 127, 127, 127, 63, 63, 31, 31, 31, 31, 63, 63, 127, 127, 63, 63, 31, 15, 3, 0, 0, 0, 0,
+                                                     },
+                                                     {
+                                                         // Archlinux Logo
+                                                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 224, 240, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 224, 248, 242, 247, 239, 255, 255, 255, 252, 240, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 192, 240, 252, 254, 255, 255, 127, 7, 3, 1, 1, 3, 7, 127, 255, 255, 255, 252, 184, 160, 128, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 7, 7, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 7, 14, 8, 0, 0, 0,
+                                                     },
+                                                     {
+                                                         // Windows Logo
+                                                         0, 0, 0, 128, 128, 128, 128, 192, 192, 192, 192, 192, 192, 224, 0, 224, 224, 224, 224, 224, 240, 240, 240, 240, 240, 240, 248, 248, 248, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 0, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 7, 7, 7, 7, 7, 0, 7, 15, 15, 15, 15, 15, 15, 15, 15, 31, 31, 31, 31, 31, 0, 0, 0,
+                                                     }};
+    oled_write_raw_P(raw_os_logo[os_int], sizeof(raw_os_logo[os_int]));
 }
 
 static int os_num;
-
-void set_os_logo(void) {
-    if (!is_keyboard_master()) {
-        return;
-    }
-    oled_set_cursor(0, 5);
-    switch (os_num) {
-        case 1:
-            render_apple_logo();
-            break;
-        case 2:
-            render_windows_logo();
-            break;
-        case 0:
-        default:
-            render_arch_logo();
-    }
-}
 
 // Display Current OS on start-up
 bool process_detected_host_os_kb(os_variant_t detected_os) {
@@ -117,7 +95,7 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
                 break;
         }
     }
-    set_os_logo();
+    render_os_logo(os_num); // not sure if this is necessary
     return true;
 }
 
@@ -151,6 +129,7 @@ static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
         /*1 0*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 4, 2, 194, 226, 50, 50, 50, 226, 194, 2, 4, 248, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 112, 96, 103, 103, 97, 97, 97, 103, 103, 32, 16, 15, 0},
         /*1 1*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 252, 124, 60, 156, 156, 156, 60, 124, 252, 248, 240, 0, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 127, 112, 112, 125, 125, 125, 112, 112, 127, 63, 31, 0, 0},
     }};
+static const char PROGMEM no_mod_icons[128] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 static bool render_ctl_shift(int ctl, int shft) {
     oled_set_cursor(0, 5);
@@ -168,17 +147,14 @@ static bool render_gui_alt(int gui, int alt) {
 /**
  * Render OS logo if all 4 mod keys are pressed simultaniously.
  * Render active mod keys
- * If no mod keys are active, clear area (reduce oled burn-in)
+ * If no mod keys are active, clear area to reduce oled burn-in
  */
 void render_mod_status(uint8_t mod_status) {
     if ((mod_status & MOD_MASK_CTRL) && (mod_status & MOD_MASK_SHIFT) && (mod_status & MOD_MASK_GUI) && (mod_status & MOD_MASK_ALT)) {
-        set_os_logo();
-    } else if (render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0) + render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0) == 0) {
+        render_os_logo(os_num);
+    } else if (!(render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0) && render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0))) {
         oled_set_cursor(0, 5);
-        for (int i = 5; i < 9; i++) {
-            // oled_set_cursor(0, i);  // shouldn't be necessary if '\n' is appended
-            oled_write_P(PSTR("     \n"), false);
-        }
+        oled_write_raw_P(no_mod_icons, sizeof(no_mod_icons));
     }
 }
 
