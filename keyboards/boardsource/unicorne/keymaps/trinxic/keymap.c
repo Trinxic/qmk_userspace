@@ -27,8 +27,8 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 
 // Layer Timeout -- NOTE: this may be moved eventually...
 void matrix_scan_user(void) {
-    mod_timeout_reached = last_input_activity_elapsed() >= last_mod_timeout;
-    if (get_highest_layer(layer_state) == _FUNC || get_highest_layer(layer_state) == _SYS && last_input_activity_elapsed() >= 10000) { // 10 seconds
+    mod_timeout_reached = (last_input_activity_elapsed() >= last_mod_timeout);
+    if ((get_highest_layer(layer_state) == _FUNC || get_highest_layer(layer_state) == _SYS) && last_input_activity_elapsed() >= 10000) { // 10 seconds
         layer_move(_DVRK);
         oled_off(); // not working...
     }
