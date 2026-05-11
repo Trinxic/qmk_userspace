@@ -28,7 +28,7 @@
 #define MASTER_RIGHT
 
 // OLED
-#define OLED_BRIGHTNESS 200 // 0 - 255
+#define OLED_BRIGHTNESS 128 // 0 - 255
 #define OLED_TIMEOUT 10000  // 10 seconds
 
 // Tap Dance
