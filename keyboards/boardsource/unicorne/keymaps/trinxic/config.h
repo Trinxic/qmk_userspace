@@ -51,4 +51,4 @@
 
 // Allow keyboard to turn on at PC cold-boot
 // originally 26k
-#define SPLIT_USB_TIMEOUT 20000 // milliseconds
+#define SPLIT_USB_TIMEOUT 16000 // milliseconds

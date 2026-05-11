@@ -128,7 +128,7 @@ static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
 static const char PROGMEM blank_row[32]       = {0};
 static const int          last_mod_timeout    = 2500; // milliseconds
 static bool               mod_timeout_reached;
-static bool               mod_unlock;
+static uint8_t            mod_unlock;
 // Not sure exactly how `MOD_MASK_CSAG` works and don't care to try it right now..
 // as in: does it work like the line below or not
 static const uint8_t ALL_MODS_PRESSED = (MOD_MASK_CTRL | MOD_MASK_SHIFT | MOD_MASK_ALT | MOD_MASK_GUI);
@@ -158,10 +158,13 @@ static bool render_gui_alt(int gui, int alt) {
  * Render active mod keys
  * If no mod keys are active, clear area to reduce oled burn-in
  */
-void render_mod_status(uint8_t mod_status) {
-    mod_unlock = (mod_status & ALL_MODS_PRESSED);
 
-    if (mod_unlock == ALL_MODS_PRESSED) {
+// (x&a and x&b and x&c and x&d) == (x&(a|b|c|d))
+
+void render_mod_status(uint8_t mod_status) {
+    mod_unlock = (mod_status & MOD_MASK_CSAG);
+
+    if (mod_unlock == MOD_MASK_CSAG) {
         render_os_logo(os_num);
         return;
     }
