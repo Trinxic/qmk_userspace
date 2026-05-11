@@ -54,12 +54,12 @@ void render_current_layer(void) {
 
 static void render_os_logo(int os_int) {
     static const char PROGMEM raw_os_logo[3][128] = {{
-                                                         // Apple Logo
-                                                         0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 128, 128, 128, 0, 0, 0, 112, 124, 62, 62, 159, 135, 128, 128, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 224, 248, 252, 254, 255, 255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 31, 15, 6, 0, 0, 0, 0, 0, 0, 0, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 248, 224, 192, 192, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 15, 31, 63, 127, 127, 127, 63, 63, 31, 31, 31, 31, 63, 63, 127, 127, 63, 63, 31, 15, 3, 0, 0, 0, 0,
-                                                     },
-                                                     {
                                                          // Archlinux Logo
                                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 224, 240, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 224, 248, 242, 247, 239, 255, 255, 255, 252, 240, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 192, 240, 252, 254, 255, 255, 127, 7, 3, 1, 1, 3, 7, 127, 255, 255, 255, 252, 184, 160, 128, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 7, 7, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 7, 14, 8, 0, 0, 0,
+                                                     },
+                                                     {
+                                                         // Apple Logo
+                                                         0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 128, 128, 128, 0, 0, 0, 112, 124, 62, 62, 159, 135, 128, 128, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 224, 248, 252, 254, 255, 255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 31, 15, 6, 0, 0, 0, 0, 0, 0, 0, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 248, 224, 192, 192, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 15, 31, 63, 127, 127, 127, 63, 63, 31, 31, 31, 31, 63, 63, 127, 127, 63, 63, 31, 15, 3, 0, 0, 0, 0,
                                                      },
                                                      {
                                                          // Windows Logo
@@ -78,20 +78,17 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
     }
     if (is_keyboard_master()) {
         switch (detected_os) {
+            case OS_LINUX:
+            case OS_UNSURE:
+            default:
+                os_num = 0;
+                break;
             case OS_MACOS:
             case OS_IOS:
                 os_num = 1;
                 break;
             case OS_WINDOWS:
                 os_num = 2;
-                break;
-            case OS_LINUX:
-                os_num = 0;
-                break;
-            case OS_UNSURE:
-                os_num = 0;
-            default:
-                // oled_write(PSTR("OS: ?"), false);
                 break;
         }
     }
@@ -128,10 +125,13 @@ static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
         /*1 0*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 4, 2, 194, 226, 50, 50, 50, 226, 194, 2, 4, 248, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 112, 96, 103, 103, 97, 97, 97, 103, 103, 32, 16, 15, 0},
         /*1 1*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 252, 124, 60, 156, 156, 156, 60, 124, 252, 248, 240, 0, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 127, 112, 112, 125, 125, 125, 112, 112, 127, 63, 31, 0, 0},
     }};
-static const char PROGMEM blank_row[32] = {0};
+static const char PROGMEM blank_row[32]       = {0};
 static const int          last_mod_timeout    = 2500; // milliseconds
 static bool               mod_timeout_reached;
-static bool               mod_lock;
+static bool               mod_unlock;
+// Not sure exactly how `MOD_MASK_CSAG` works and don't care to try it right now..
+// as in: does it work like the line below or not
+static const uint8_t ALL_MODS_PRESSED = (MOD_MASK_CTRL | MOD_MASK_SHIFT | MOD_MASK_ALT | MOD_MASK_GUI);
 
 static void clear_rows(int num_rows, int starting_row) {
     for (int i = 0; i < num_rows; i++) {
@@ -159,27 +159,18 @@ static bool render_gui_alt(int gui, int alt) {
  * If no mod keys are active, clear area to reduce oled burn-in
  */
 void render_mod_status(uint8_t mod_status) {
-    if ((mod_status & MOD_MASK_CTRL) && (mod_status & MOD_MASK_SHIFT) && (mod_status & MOD_MASK_GUI) && (mod_status & MOD_MASK_ALT)) {
+    mod_unlock = (mod_status & ALL_MODS_PRESSED);
+
+    if (mod_unlock == ALL_MODS_PRESSED) {
         render_os_logo(os_num);
         return;
     }
 
-    // CLEAN UP CODE / LOGIC
-    if (!((mod_status & MOD_MASK_CTRL) || (mod_status & MOD_MASK_SHIFT) || (mod_status & MOD_MASK_GUI) || (mod_status & MOD_MASK_ALT))) {
-        if (mod_timeout_reached) {
-            clear_rows(4, 5);
-            mod_lock = true;
-        }
-        if (!mod_lock) {
-            render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0);
-            render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0 != 0);
-        }
-        return;
-    }
-
-    mod_lock = false;
-    render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0);
-    render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0 != 0);
+    if (mod_unlock) {
+        render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0);
+        render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0 != 0);
+    } else if (mod_timeout_reached)
+        clear_rows(4, 5);
 }
 
 void render_master_oled(void) {
