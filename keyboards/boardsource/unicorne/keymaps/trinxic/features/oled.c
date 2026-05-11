@@ -99,7 +99,6 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
 }
 
 // Mod Key Icons (Paired)
-static const char PROGMEM no_mods[64]         = {0};
 static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
     {
         // ctl | shft
@@ -129,16 +128,28 @@ static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
         /*1 0*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 4, 2, 194, 226, 50, 50, 50, 226, 194, 2, 4, 248, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 112, 96, 103, 103, 97, 97, 97, 103, 103, 32, 16, 15, 0},
         /*1 1*/ {0, 240, 248, 252, 28, 28, 28, 252, 28, 28, 28, 252, 248, 240, 0, 0, 0, 240, 248, 252, 124, 60, 156, 156, 156, 60, 124, 252, 248, 240, 0, 0, 0, 31, 63, 127, 113, 113, 113, 127, 113, 113, 113, 127, 63, 31, 0, 0, 0, 31, 63, 127, 112, 112, 125, 125, 125, 112, 112, 127, 63, 31, 0, 0},
     }};
+static const char PROGMEM blank_row[32]       = {0};
+static const int          last_mod_timeout    = 5000; // milliseconds
+static bool               mod_timeout_reached = true;
 
-static void render_ctl_shift(int ctl, int shft) {
+static void clear_rows(int num_rows, int starting_row) {
+    for (int i = 0; i < num_rows; i++) {
+        oled_set_cursor(0, i + starting_row);
+        oled_write_raw_P(blank_row, sizeof(blank_row));
+    }
+}
+
+static bool render_ctl_shift(int ctl, int shft) {
     oled_set_cursor(0, 5);
     oled_write_raw_P( // [2] and [3] have ctrl so 0|2 + 0|1 can produce all for 4 combinations.. so smart
         mod_icons[0][2 * ctl + shft], sizeof(mod_icons[0][2 * ctl + shft]));
+    return (ctl + shft) > 0;
 }
 
-static void render_gui_alt(int gui, int alt) {
+static bool render_gui_alt(int gui, int alt) {
     oled_set_cursor(0, 7);
     oled_write_raw_P(mod_icons[1 + os_num][2 * gui + alt], sizeof(mod_icons[1 + os_num][2 * gui + alt]));
+    return (gui + alt) > 0;
 }
 
 /**
@@ -150,16 +161,19 @@ void render_mod_status(uint8_t mod_status) {
     if ((mod_status & MOD_MASK_CTRL) && (mod_status & MOD_MASK_SHIFT) && (mod_status & MOD_MASK_GUI) && (mod_status & MOD_MASK_ALT)) {
         render_os_logo(os_num);
         return;
-    } else if (!((mod_status & MOD_MASK_CTRL) || (mod_status & MOD_MASK_SHIFT) || (mod_status & MOD_MASK_GUI) || (mod_status & MOD_MASK_ALT))) {
-        oled_set_cursor(0, 5);
-        oled_write_raw_P(no_mods, sizeof(no_mods));
-        oled_set_cursor(0, 7);
-        oled_write_raw_P(no_mods, sizeof(no_mods));
-        return;
+    } else if (render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0) + render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0 != 0)) {
+        if (mod_timeout_reached) clear_rows(4, 5);
     }
 
-    render_ctl_shift((mod_status & MOD_MASK_CTRL) ? 1 : 0, ((mod_status & MOD_MASK_SHIFT) || host_keyboard_led_state().caps_lock) ? 1 : 0);
-    render_gui_alt((mod_status & MOD_MASK_GUI) ? 1 : 0, (mod_status & MOD_MASK_ALT) ? 1 : 0);
+    /*
+    else if (!((mod_status & MOD_MASK_CTRL) || (mod_status & MOD_MASK_SHIFT) || (mod_status & MOD_MASK_GUI) || (mod_status & MOD_MASK_ALT))) {
+        for (int i = 0; i < 4; i++) {
+            oled_set_cursor(0, i+5);
+            oled_write_raw_P(blank_row, sizeof(blank_row));
+        }
+        return;
+    }
+    */
 }
 
 void render_master_oled(void) {
