@@ -99,6 +99,7 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
 }
 
 // Mod Key Icons (Paired)
+static const char PROGMEM no_mods[64]         = {0};
 static const char PROGMEM mod_icons[4][4][64] = { // '1' = pressed
     {
         // ctl | shft
@@ -150,10 +151,10 @@ void render_mod_status(uint8_t mod_status) {
         render_os_logo(os_num);
         return;
     } else if (!((mod_status & MOD_MASK_CTRL) || (mod_status & MOD_MASK_SHIFT) || (mod_status & MOD_MASK_GUI) || (mod_status & MOD_MASK_ALT))) {
-        for (int i = 0; i < 4; i++) {
-            oled_set_cursor(0, 5 + i);
-            oled_write_P(PSTR("      "), false);
-        }
+        oled_set_cursor(0, 5);
+        oled_write_raw_P(no_mods, sizeof(no_mods));
+        oled_set_cursor(0, 7);
+        oled_write_raw_P(no_mods, sizeof(no_mods));
         return;
     }
 
